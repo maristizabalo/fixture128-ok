@@ -83,12 +83,13 @@ function Panel({ onSalir }) {
 			</header>
 
 			<main className="admin__cuerpo">
-				{estado?.almacen === 'archivo' && (
-					<p className="aviso">
-						Guardando en un archivo local (.datos/). Es lo normal en la computadora; en Vercel hay que conectar Upstash
-						Redis para que los resultados se guarden.
+				{estado && !estado.donde && (
+					<p className="aviso aviso--error">
+						Los resultados no se están guardando: en Vercel falta la variable GITHUB_TOKEN (Settings → Environment
+						Variables) y volver a desplegar. Los pasos están en el README.
 					</p>
 				)}
+				{estado?.donde && <p className="admin__donde">Guardando en: {estado.donde}</p>}
 				{error && <p className="aviso aviso--error">{error}</p>}
 
 				<div className="segmentos admin__pestanas" role="tablist">

@@ -4,7 +4,7 @@
  */
 import { actualizarJugadores } from '../server/almacen.js';
 import { cuerpo, fallo, responder, ruta, sinCache } from '../server/http.js';
-import { fijarSiVieneDelRepo, leerTorneo } from '../server/torneo.js';
+import { fijarSiVieneDelRepo, leerTorneo, torneoDesde } from '../server/torneo.js';
 import { limpiarJugador } from '../server/validar.js';
 
 export default ruta(
@@ -20,8 +20,8 @@ export default ruta(
 		await fijarSiVieneDelRepo(estado);
 		const jugadores = [...estado.jugadores];
 		jugadores[i] = nuevo;
-		await actualizarJugadores(jugadores);
-		responder(res, 200, await leerTorneo(), sinCache);
+		const nuevoEstado = await actualizarJugadores(jugadores, `Jugador corregido: llave ${nuevo.llave} ${nuevo.nombre}`);
+		responder(res, 200, await torneoDesde(nuevoEstado), sinCache);
 	},
 	{ admin: true }
 );

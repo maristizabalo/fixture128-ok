@@ -11,7 +11,7 @@
 import { reemplazarJugadores } from '../server/almacen.js';
 import { excelDelRepo } from '../server/excelRepo.js';
 import { cuerpo, fallo, responder, ruta, sinCache } from '../server/http.js';
-import { leerTorneo } from '../server/torneo.js';
+import { torneoDesde } from '../server/torneo.js';
 import { limpiarJugador } from '../server/validar.js';
 
 export default ruta(
@@ -36,12 +36,12 @@ export default ruta(
 		const lista = jugadores.map((j, i) => limpiarJugador(j, i));
 		if (lista.filter(Boolean).length < 2) return fallo(res, 400, 'Hacen falta al menos dos jugadores');
 
-		await reemplazarJugadores(lista, {
+		const estado = await reemplazarJugadores(lista, {
 			archivo: String(archivo ?? '').slice(0, 120) || null,
 			cargado: new Date().toISOString(),
 			tamano: n
 		});
-		responder(res, 200, await leerTorneo(), sinCache);
+		responder(res, 200, await torneoDesde(estado), sinCache);
 	},
 	{ admin: true }
 );

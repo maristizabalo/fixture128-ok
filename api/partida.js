@@ -14,7 +14,7 @@
 import { armarCuadro, registrosHuerfanos } from '../shared/cuadro.js';
 import { escribirPartidas } from '../server/almacen.js';
 import { cuerpo, fallo, responder, ruta, sinCache } from '../server/http.js';
-import { fijarSiVieneDelRepo, leerTorneo } from '../server/torneo.js';
+import { fijarSiVieneDelRepo, leerTorneo, torneoDesde } from '../server/torneo.js';
 import { entero, texto } from '../server/validar.js';
 
 export default ruta(
@@ -58,9 +58,13 @@ export default ruta(
 		const cambios = { [p.id]: registro };
 		for (const id of registrosHuerfanos({ ...estado, partidas })) cambios[id] = null;
 
+		const que = { final: 'resultado', juego: 'en juego', limpiar: 'borrada' }[datos.accion];
+		const marcador = registro?.estado === 'final' ? ` ${registro.pa ?? '-'}-${registro.pb ?? '-'}` : '';
+		const motivo = `P${p.numero} ${que}: ${p.a.nombre} vs ${p.b.nombre}${marcador}`;
+
 		await fijarSiVieneDelRepo(estado);
-		await escribirPartidas(cambios);
-		responder(res, 200, await leerTorneo(), sinCache);
+		const nuevo = await escribirPartidas(cambios, motivo);
+		responder(res, 200, await torneoDesde(nuevo), sinCache);
 	},
 	{ admin: true }
 );

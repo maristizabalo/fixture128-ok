@@ -60,20 +60,37 @@ MAYÚSCULAS se pasan a Nombre Propio. "2", "2a", "segunda" quedan como `2da`.
 En cuanto se carga el primer resultado, la lista queda fijada: cambiar el Excel
 después ya no mueve a nadie de llave con partidas jugadas.
 
-## Dónde se guardan los resultados
+## Dónde se guardan los resultados (gratis)
 
-Vercel no deja escribir archivos mientras la página está publicada, así que los
-resultados van a un **Redis de Upstash** (gratis, se conecta desde Vercel con un
-clic). En la computadora no hace falta nada: se guardan en `.datos/`.
+Vercel no deja escribir archivos mientras la página está publicada. Por eso los
+resultados se guardan como **un JSON dentro de este mismo repo de GitHub**, en la
+rama `datos-torneo` (archivo `torneo.json`). No hace falta ninguna base de datos
+ni servicio extra, y cuesta $0:
+
+- Cada resultado es un commit en esa rama, así que queda el historial de todo lo que se cargó (quién ganó, a qué hora, correcciones).
+- La rama se crea sola con el primer cambio. `vercel.json` desactiva los despliegues de esa rama, así que un resultado no redespliega la página.
+- Si dos mesas cargan al mismo tiempo, GitHub rechaza la escritura que llegó tarde y se reintenta sobre lo más nuevo: no se pierde ninguna.
+
+En la computadora (`npm run dev`) se guarda en `.datos/` sin configurar nada.
+
+> Alternativa, también gratis: un Redis de Upstash desde **Storage** en Vercel. Si
+> están `KV_REST_API_URL` y `KV_REST_API_TOKEN` (y no `GITHUB_TOKEN`), se usa ese.
 
 ## Publicar en Vercel
 
 1. En Vercel: **Add New → Project** → importar `maristizabalo/fixture128-ok`. Vercel detecta Vite solo.
-2. En el proyecto: **Storage → Create Database → Upstash (Redis)** → conectarlo al proyecto. Las variables `KV_REST_API_URL` y `KV_REST_API_TOKEN` llegan solas.
-3. En **Settings → Environment Variables** (opcional pero recomendado):
+2. Crear el token de GitHub (una sola vez):
+   1. GitHub → foto de perfil → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
+   2. Nombre: `fixture128-vercel`. Vencimiento: el que quieras (que pase la fecha del torneo).
+   3. **Repository access → Only select repositories → `fixture128-ok`**.
+   4. **Permissions → Repository permissions → Contents: Read and write**. Nada más.
+   5. **Generate token** y copiarlo (empieza con `github_pat_`).
+3. En Vercel, el proyecto → **Settings → Environment Variables**:
+   - `GITHUB_TOKEN` = el token copiado (obligatorio).
    - `ADMIN_PIN` = el PIN del panel (si no se pone, es `951209`).
    - `AUTH_SECRET` = un texto largo cualquiera.
-4. **Redeploy**. Listo: `/` es el fixture y `/admin` el panel.
+4. **Deployments → ⋯ → Redeploy** (las variables nuevas solo aplican a un despliegue nuevo).
+5. En `/admin` debe aparecer "Guardando en: JSON en GitHub…". Si sale el aviso rojo, falta el token o no se redesplegó.
 
 ## En la computadora
 

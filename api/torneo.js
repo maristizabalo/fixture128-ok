@@ -6,7 +6,6 @@
  * cuadro a la vez, a la base de datos le llega una lectura cada pocos segundos
  * y no cien. El panel pide `?fresco=...` para saltarse esa copia.
  */
-import { usaRedis } from '../server/almacen.js';
 import { responder, ruta, sinCache } from '../server/http.js';
 import { leerTorneo } from '../server/torneo.js';
 
@@ -16,7 +15,7 @@ export default ruta(['GET'], async (req, res) => {
 	responder(
 		res,
 		200,
-		{ ...torneo, almacen: usaRedis ? 'redis' : 'archivo' },
+		torneo,
 		fresco ? sinCache : { 'Cache-Control': 'public, max-age=0, s-maxage=5, stale-while-revalidate=15' }
 	);
 });

@@ -1,6 +1,9 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
 	"framework": "vite",
+	"git": {
+		"deploymentEnabled": { "datos-torneo": false }
+	},
 	"functions": {
 		"api/*.js": { "includeFiles": "datos/**" }
 	},

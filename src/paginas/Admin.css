@@ -716,3 +716,9 @@
 .lista-jugadores__edita .lista-jugadores__cat {
 	flex: 0 0 5rem;
 }
+
+.admin__donde {
+	margin: 0;
+	color: var(--texto-tenue);
+	font-size: 0.8rem;
+}
