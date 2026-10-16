@@ -1,0 +1,554 @@
+/*
+	El cuadro. Todas las medidas salen de unas pocas variables: el alto de una
+	llave con su aire (--alto-nodo) por el número de llaves de la columna más
+	llena (--filas) da el alto del cuadro, y cada columna lo reparte en partes
+	iguales. Ninguna línea se calcula a mano.
+*/
+.llaves {
+	--salto: 1rem;
+	--alto-lado: 1.72rem;
+	--alto-nodo: 4.75rem;
+	--ancho-primera: 15.25rem;
+	--ancho: 12.75rem;
+	--ancho-centro: 19rem;
+	--ancho-campeon: 16rem;
+	--alto-minimo: 32rem;
+	--linea: rgba(101, 189, 242, 0.42);
+
+	display: grid;
+	grid-template-rows: auto max(calc(var(--alto-nodo) * var(--filas)), var(--alto-minimo));
+	column-gap: calc(var(--salto) * 2);
+	row-gap: 0.9rem;
+	width: max-content;
+	padding: 1.25rem 1.5rem 1.75rem;
+}
+
+/* ------------------------------------------------------------ rótulos */
+
+.rotulo {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.15rem;
+	padding-bottom: 0.55rem;
+	border-bottom: 2px solid rgba(101, 189, 242, 0.3);
+	white-space: nowrap;
+}
+
+.rotulo__nombre {
+	font-size: 0.74rem;
+	color: var(--cromo);
+}
+
+.rotulo__cuenta {
+	font-size: 0.72rem;
+	font-weight: 500;
+	color: var(--texto-suave);
+}
+
+.rotulo--final {
+	border-bottom-color: var(--electrico);
+}
+
+.rotulo--final .rotulo__nombre {
+	font-size: 0.86rem;
+	background: var(--gradiente-cromo);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+/* ------------------------------------------------------------ columnas */
+
+.columna {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.nodo {
+	position: relative;
+	flex: 1 1 0;
+	min-height: 0;
+	display: flex;
+	align-items: center;
+}
+
+.nodo__cuerpo {
+	width: 100%;
+	min-width: 0;
+}
+
+/* ------------------------------------------------------------ líneas */
+
+/* Tres trazos por pareja: la salida de cada llave, la vertical que junta a las
+   dos y la entrada a la llave que sale de ellas. */
+.columna.con-salida .nodo::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	width: var(--salto);
+	border-top: 1.5px solid var(--linea);
+}
+
+.columna--izq.con-salida .nodo::after {
+	left: 100%;
+}
+
+.columna--der.con-salida .nodo::after {
+	right: 100%;
+}
+
+.columna.con-salida .nodo:nth-child(odd)::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	height: 100%;
+	border-left: 1.5px solid var(--linea);
+}
+
+.columna--izq.con-salida .nodo:nth-child(odd)::before {
+	left: calc(100% + var(--salto));
+}
+
+.columna--der.con-salida .nodo:nth-child(odd)::before {
+	right: calc(100% + var(--salto));
+}
+
+.columna.con-entrada .nodo__cuerpo::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	width: var(--salto);
+	border-top: 1.5px solid var(--linea);
+}
+
+.columna--izq.con-entrada .nodo__cuerpo::before {
+	right: 100%;
+}
+
+.columna--der.con-entrada .nodo__cuerpo::before {
+	left: 100%;
+}
+
+/* En el espejo, la mitad derecha se lee de fuera hacia dentro: el tanteo mira
+   al centro igual que en la mitad izquierda. */
+.columna--der .lado {
+	flex-direction: row-reverse;
+	text-align: right;
+}
+
+.columna--der .llave__num {
+	left: auto;
+	right: 0.55rem;
+}
+
+.columna--der .llave__vivo,
+.columna--der .llave__mesa {
+	right: auto;
+	left: 0.55rem;
+}
+
+/* ------------------------------------------------------------ llave */
+
+.llave {
+	position: relative;
+	display: block;
+	width: 100%;
+	padding: 0;
+	border: 1px solid rgba(101, 189, 242, 0.22);
+	border-radius: 0.55rem;
+	background: linear-gradient(180deg, rgba(25, 38, 70, 0.96) 0%, rgba(11, 17, 32, 0.97) 100%);
+	box-shadow:
+		0 8px 20px -12px rgba(0, 0, 0, 0.95),
+		inset 0 1px 0 rgba(255, 255, 255, 0.06);
+	text-align: left;
+	transition:
+		border-color 160ms var(--curva),
+		box-shadow 160ms var(--curva),
+		opacity 200ms var(--curva),
+		transform 160ms var(--curva);
+}
+
+.llave:hover {
+	border-color: var(--electrico);
+	transform: translateY(-1px);
+}
+
+.llave__lados {
+	display: block;
+	overflow: hidden;
+	border-radius: inherit;
+}
+
+.llave--final {
+	border-color: rgba(101, 189, 242, 0.42);
+}
+
+.llave--espera,
+.llave--vacia {
+	background: rgba(11, 17, 32, 0.7);
+	border-style: dashed;
+	border-color: rgba(101, 189, 242, 0.2);
+	box-shadow: none;
+}
+
+.llave--juego {
+	border-color: rgba(255, 59, 78, 0.75);
+	box-shadow:
+		0 0 0 1px rgba(255, 59, 78, 0.3),
+		0 0 22px -4px rgba(255, 59, 78, 0.55);
+}
+
+.llave--buscada {
+	z-index: 2;
+	border-color: #fff;
+	box-shadow:
+		0 0 0 2px var(--electrico),
+		0 0 28px rgba(33, 171, 244, 0.75);
+}
+
+.llaves--buscando .llave:not(.llave--buscada) {
+	opacity: 0.28;
+}
+
+/* Lo que acaba de cambiar con el último refresco destella un par de veces: en
+   el televisor del club se ve de lejos qué mesa terminó. */
+.llave--reciente {
+	animation: destello 1.1s ease-out 3;
+}
+
+@keyframes destello {
+	0% {
+		box-shadow:
+			0 0 0 3px rgba(255, 255, 255, 0.9),
+			0 0 36px rgba(33, 171, 244, 0.95);
+	}
+	100% {
+		box-shadow:
+			0 0 0 0 rgba(255, 255, 255, 0),
+			0 0 0 rgba(33, 171, 244, 0);
+	}
+}
+
+/* Las etiquetas van montadas sobre el borde, fuera del alto de la llave: todas
+   las llaves miden lo mismo y las líneas siguen cayendo donde deben. */
+.llave__num,
+.llave__mesa,
+.llave__vivo {
+	position: absolute;
+	top: -0.56rem;
+	z-index: 1;
+	padding: 0 0.32rem;
+	border-radius: 0.3rem;
+	font-family: var(--font-ancha);
+	font-size: 0.52rem;
+	font-weight: 800;
+	letter-spacing: 0.06em;
+	line-height: 1.05rem;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.llave__num {
+	left: 0.55rem;
+	color: var(--texto-suave);
+	background: var(--noche-900);
+	border: 1px solid rgba(101, 189, 242, 0.18);
+}
+
+.llave__mesa {
+	right: 0.55rem;
+	color: var(--cromo);
+	background: var(--rey-700);
+}
+
+.llave__mesa--wo {
+	background: #5a2330;
+	color: #ffc2c8;
+}
+
+.llave__vivo {
+	right: 0.55rem;
+	padding-inline: 0.4rem;
+	background: #3a0d16;
+	border: 1px solid rgba(255, 59, 78, 0.6);
+	font-size: 0.52rem;
+}
+
+.llave__vivo::before {
+	width: 0.38rem;
+	height: 0.38rem;
+}
+
+/* ------------------------------------------------------------ lados */
+
+.lado {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	height: var(--alto-lado);
+	padding: 0 0.5rem;
+	font-family: var(--font-nombre);
+	font-size: 0.99rem;
+	font-weight: 600;
+	line-height: 1;
+	color: var(--texto);
+}
+
+.lado + .lado {
+	border-top: 1px solid rgba(101, 189, 242, 0.12);
+}
+
+.lado__llave {
+	flex: 0 0 1.55rem;
+	padding: 0.18rem 0;
+	border-radius: 0.25rem;
+	background: rgba(33, 171, 244, 0.13);
+	color: var(--electrico-claro);
+	font-family: var(--font-ancha);
+	font-size: 0.58rem;
+	font-weight: 800;
+	text-align: center;
+}
+
+.lado__nombre {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.lado__pts {
+	flex: 0 0 auto;
+	min-width: 1.35rem;
+	font-family: var(--font-display);
+	font-size: 1.02rem;
+	color: var(--cromo-2);
+	text-align: right;
+}
+
+.columna--der .lado__pts {
+	text-align: left;
+}
+
+/* Quien pasa: la barra cian en el canto, el fondo teñido y la letra en
+   blanco. Quien queda fuera se apaga, no se tacha. */
+.lado--gana {
+	background: linear-gradient(90deg, rgba(33, 171, 244, 0.3) 0%, rgba(33, 171, 244, 0.05) 100%);
+	box-shadow: inset 3px 0 0 var(--electrico);
+	color: #fff;
+	font-weight: 700;
+}
+
+.columna--der .lado--gana {
+	background: linear-gradient(270deg, rgba(33, 171, 244, 0.3) 0%, rgba(33, 171, 244, 0.05) 100%);
+	box-shadow: inset -3px 0 0 var(--electrico);
+}
+
+.lado--gana .lado__pts {
+	color: #fff;
+	text-shadow: 0 0 10px rgba(33, 171, 244, 0.85);
+}
+
+.lado--fuera {
+	color: var(--texto-tenue);
+}
+
+.lado--fuera .lado__pts {
+	color: var(--texto-tenue);
+}
+
+.lado--fuera .chip-cat {
+	opacity: 0.45;
+}
+
+.lado--vacio .lado__nombre {
+	color: var(--texto-tenue);
+	font-size: 0.9rem;
+	font-style: italic;
+	font-weight: 500;
+}
+
+.lado--buscado {
+	background: rgba(255, 255, 255, 0.14);
+	color: #fff;
+}
+
+/* ------------------------------------------------------------ centro (espejo) */
+
+.centro {
+	display: grid;
+	grid-template-rows: 1fr auto 1fr;
+	min-width: 0;
+}
+
+.centro__marca {
+	align-self: end;
+	padding-bottom: 1.5rem;
+}
+
+.centro__marca img {
+	width: 100%;
+	mask-image:
+		linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%),
+		linear-gradient(180deg, transparent 0%, #000 10%, #000 88%, transparent 100%);
+	mask-composite: intersect;
+	-webkit-mask-composite: source-in;
+}
+
+.centro__final {
+	position: relative;
+}
+
+.centro__final .llave {
+	border-color: rgba(101, 189, 242, 0.55);
+	box-shadow:
+		0 0 0 1px rgba(33, 171, 244, 0.25),
+		0 14px 40px -14px rgba(33, 171, 244, 0.6);
+}
+
+.centro__final .lado {
+	--alto-lado: 2.1rem;
+	font-size: 1.12rem;
+}
+
+/* Los brazos que atan la final con las dos semifinales. */
+.centro__final::before,
+.centro__final::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	width: calc(var(--salto) * 2);
+	border-top: 1.5px solid var(--linea);
+}
+
+.centro__final::before {
+	right: 100%;
+}
+
+.centro__final::after {
+	left: 100%;
+}
+
+.centro__campeon {
+	align-self: start;
+	padding-top: 1.6rem;
+}
+
+/* ------------------------------------------------------------ campeón */
+
+.columna-campeon {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.columna-campeon::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: 100%;
+	width: calc(var(--salto) * 2);
+	border-top: 1.5px solid var(--linea);
+}
+
+.campeon {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.45rem;
+	width: 100%;
+	padding: 1.3rem 1rem 1.2rem;
+	border: 1px solid var(--borde-fuerte);
+	border-radius: 1rem;
+	background:
+		radial-gradient(ellipse 90% 70% at 50% 0%, rgba(33, 171, 244, 0.28), transparent 70%),
+		rgba(11, 17, 32, 0.92);
+	text-align: center;
+}
+
+.campeon--listo {
+	border-color: var(--electrico);
+	box-shadow:
+		0 0 0 1px rgba(33, 171, 244, 0.45),
+		0 0 60px -12px rgba(33, 171, 244, 0.85);
+}
+
+.campeon__marco {
+	display: grid;
+	place-items: center;
+	width: 6.2rem;
+	aspect-ratio: 1;
+	border: 2px solid rgba(101, 189, 242, 0.45);
+	border-radius: 50%;
+	background: radial-gradient(circle at 50% 35%, rgba(101, 189, 242, 0.28), rgba(11, 17, 32, 0.92) 70%);
+}
+
+.campeon--listo .campeon__marco {
+	border-color: var(--cromo);
+	animation: entra 900ms var(--curva) both;
+}
+
+.campeon__copa {
+	width: 3.4rem;
+	height: 3.4rem;
+	color: var(--cromo);
+	filter: drop-shadow(0 0 12px rgba(33, 171, 244, 0.85));
+}
+
+.campeon__interrogante {
+	font-size: 3.4rem;
+	line-height: 1;
+	color: rgba(101, 189, 242, 0.45);
+}
+
+.campeon__rotulo {
+	margin: 0.2rem 0 0;
+	font-size: 1.15rem;
+	letter-spacing: 0.16em;
+}
+
+.campeon__nombre {
+	margin: 0;
+	font-size: 1.65rem;
+	line-height: 1.05;
+	color: #fff;
+	text-wrap: balance;
+}
+
+.campeon__extra {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 0.4rem;
+	margin: 0;
+	color: var(--texto-suave);
+	font-size: 0.85rem;
+}
+
+.campeon__espera {
+	margin: 0;
+	color: var(--texto-suave);
+	font-size: 0.9rem;
+}
+
+@keyframes entra {
+	from {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+}
+
+/* En la primera ronda el canto izquierdo lo ocupa el número de llave: la
+   etiqueta de la partida se corre para no taparlo. */
+.llave--primera .llave__num {
+	left: 2.35rem;
+}
+
+.columna--der .llave--primera .llave__num {
+	left: auto;
+	right: 2.35rem;
+}

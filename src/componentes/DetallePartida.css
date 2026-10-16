@@ -1,0 +1,123 @@
+.detalle__estado {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.6rem;
+	margin: 0 0 1rem;
+	color: var(--texto-suave);
+	font-family: var(--font-ancha);
+	font-size: 0.66rem;
+	font-weight: 800;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.detalle__estado--final {
+	color: var(--electrico-claro);
+}
+
+.detalle__wo {
+	padding: 0.1rem 0.45rem;
+	border-radius: 0.3rem;
+	background: #5a2330;
+	color: #ffc2c8;
+}
+
+.detalle__hace {
+	color: var(--texto-tenue);
+	font-family: var(--font-cuerpo);
+	font-size: 0.82rem;
+	font-weight: 500;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+.detalle__cruce {
+	display: grid;
+	gap: 0.55rem;
+}
+
+.detalle__vs {
+	justify-self: center;
+	color: var(--texto-tenue);
+	font-size: 0.95rem;
+}
+
+.detalle__jugador {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	grid-template-areas:
+		'llave puntos'
+		'nombre puntos'
+		'extra puntos';
+	align-items: center;
+	gap: 0.15rem 1rem;
+	padding: 0.85rem 1rem;
+	border: 1px solid var(--borde);
+	border-radius: var(--radio);
+	background: rgba(6, 10, 20, 0.55);
+}
+
+.detalle__jugador--gana {
+	border-color: var(--electrico);
+	background: linear-gradient(90deg, rgba(33, 171, 244, 0.22), rgba(6, 10, 20, 0.55));
+	box-shadow: inset 4px 0 0 var(--electrico);
+}
+
+.detalle__jugador--fuera {
+	opacity: 0.6;
+}
+
+.detalle__llave {
+	grid-area: llave;
+	color: var(--electrico-claro);
+	font-size: 0.58rem;
+	letter-spacing: 0.1em;
+}
+
+.detalle__nombre {
+	grid-area: nombre;
+	font-size: 1.45rem;
+	line-height: 1.1;
+}
+
+.detalle__nombre--vacio {
+	color: var(--texto-suave);
+	font-family: var(--font-cuerpo);
+	font-size: 1rem;
+	font-style: italic;
+}
+
+.detalle__extra {
+	grid-area: extra;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.45rem;
+	color: var(--texto-suave);
+	font-size: 0.85rem;
+}
+
+.detalle__puntos {
+	grid-area: puntos;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+.detalle__puntos strong {
+	font-size: 2.4rem;
+	font-weight: 400;
+	line-height: 1;
+}
+
+.detalle__puntos small {
+	color: var(--texto-suave);
+	font-size: 0.75rem;
+}
+
+.detalle__entradas {
+	margin: 0.9rem 0 0;
+	color: var(--texto-suave);
+	text-align: center;
+}

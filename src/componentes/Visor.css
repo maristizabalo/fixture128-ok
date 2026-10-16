@@ -1,0 +1,316 @@
+.visor {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+/* ------------------------------------------------------------ barra */
+
+.barra {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.6rem 0.75rem;
+	padding: 0.6rem;
+	border: 1px solid var(--borde);
+	border-radius: var(--radio);
+	background: rgba(8, 13, 26, 0.86);
+	backdrop-filter: blur(10px);
+}
+
+.barra__desde {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 0;
+}
+
+.barra__rotulo {
+	font-family: var(--font-ancha);
+	font-size: 0.6rem;
+	font-weight: 800;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--texto-tenue);
+}
+
+.segmentos--desliza {
+	max-width: 100%;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.segmentos--desliza::-webkit-scrollbar {
+	display: none;
+}
+
+.segmentos--desliza button {
+	padding-inline: 0.7rem;
+}
+
+.barra__acciones {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+	margin-left: auto;
+}
+
+.zoom {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.15rem;
+}
+
+.zoom__valor {
+	min-width: 3.4rem;
+	padding: 0.3rem 0.2rem;
+	border: 0;
+	background: none;
+	color: var(--texto-suave);
+	font-family: var(--font-ancha);
+	font-size: 0.7rem;
+	font-weight: 800;
+}
+
+/* ------------------------------------------------------------ buscador */
+
+.buscador {
+	position: relative;
+	flex: 1 1 14rem;
+	max-width: 22rem;
+}
+
+.buscador__icono {
+	position: absolute;
+	top: 50%;
+	left: 0.8rem;
+	transform: translateY(-50%);
+	color: var(--texto-tenue);
+	pointer-events: none;
+}
+
+.buscador__campo {
+	padding-left: 2.3rem;
+	border-radius: 999px;
+}
+
+.buscador__lista {
+	position: absolute;
+	top: calc(100% + 0.4rem);
+	left: 0;
+	right: 0;
+	z-index: 30;
+	margin: 0;
+	padding: 0.35rem;
+	list-style: none;
+	background: rgba(11, 17, 32, 0.98);
+}
+
+.buscador__lista button {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	width: 100%;
+	padding: 0.5rem 0.6rem;
+	border: 0;
+	border-radius: 0.5rem;
+	background: none;
+	text-align: left;
+}
+
+.buscador__lista button:hover,
+.buscador__lista button:focus-visible {
+	background: rgba(35, 108, 202, 0.3);
+}
+
+.buscador__llave {
+	flex: 0 0 2rem;
+	color: var(--electrico-claro);
+	font-family: var(--font-ancha);
+	font-size: 0.65rem;
+	font-weight: 800;
+}
+
+.buscador__nombre {
+	flex: 1;
+	font-family: var(--font-nombre);
+	font-size: 1.02rem;
+	font-weight: 600;
+}
+
+/* El camino del jugador buscado, en una línea bajo la barra. */
+.rastro {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.3rem 0.8rem;
+	padding: 0.55rem 0.6rem 0.55rem 1rem;
+	border: 1px solid var(--electrico);
+	border-radius: var(--radio);
+	background: linear-gradient(90deg, rgba(33, 171, 244, 0.2), rgba(11, 17, 32, 0.6));
+}
+
+.rastro__nombre {
+	font-family: var(--font-display);
+	font-size: 1.2rem;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.rastro__texto {
+	flex: 1;
+	color: var(--cromo-2);
+	font-size: 0.92rem;
+}
+
+.rastro__cerrar {
+	display: grid;
+	place-items: center;
+	width: 2rem;
+	height: 2rem;
+	border: 0;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.08);
+}
+
+/* ------------------------------------------------------------ lienzo */
+
+.lienzo {
+	position: relative;
+	height: calc(100dvh - 6.5rem);
+	min-height: 26rem;
+	overflow: auto;
+	overscroll-behavior: contain;
+	border: 1px solid var(--borde);
+	border-radius: var(--radio);
+	background:
+		radial-gradient(ellipse 60% 45% at 50% 50%, rgba(35, 108, 202, 0.16), transparent 70%),
+		rgba(6, 10, 20, 0.55);
+	cursor: grab;
+	touch-action: pan-x pan-y;
+}
+
+.lienzo--arrastrando {
+	cursor: grabbing;
+	user-select: none;
+}
+
+.lienzo--arrastrando .llave {
+	pointer-events: none;
+}
+
+.lienzo__zoom {
+	width: max-content;
+	min-width: 100%;
+}
+
+/* El cuadro se centra cuando sobra ancho. */
+.lienzo__zoom > .llaves {
+	margin-inline: auto;
+}
+
+.visor__aviso {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	padding: 0.8rem 1.2rem;
+	border-radius: 999px;
+	background: rgba(11, 17, 32, 0.95);
+	border: 1px solid var(--borde-fuerte);
+	font-weight: 600;
+}
+
+/* ------------------------------------------------------------ pantalla completa */
+
+.visor--completa {
+	height: 100%;
+	padding: 0.6rem;
+	background: var(--noche-900);
+	background-image:
+		radial-gradient(ellipse 70% 42% at 50% 0%, rgba(33, 171, 244, 0.25), transparent 70%),
+		linear-gradient(180deg, #0d1a36 0%, var(--noche-950) 100%);
+}
+
+.visor--completa .barra {
+	position: static;
+}
+
+.visor--completa .lienzo {
+	flex: 1;
+	height: auto;
+	min-height: 0;
+}
+
+.visor--sustituto {
+	position: fixed;
+	inset: 0;
+	z-index: 90;
+	padding: calc(0.6rem + env(safe-area-inset-top, 0px)) calc(0.6rem + env(safe-area-inset-right, 0px))
+		calc(0.6rem + env(safe-area-inset-bottom, 0px)) calc(0.6rem + env(safe-area-inset-left, 0px));
+}
+
+@media (max-width: 720px) {
+	.barra {
+		padding: 0.5rem;
+		gap: 0.5rem;
+	}
+
+	.barra > .segmentos {
+		order: 1;
+	}
+
+	.barra__acciones {
+		order: 2;
+		margin-left: 0;
+	}
+
+	.buscador {
+		order: 3;
+		flex-basis: 100%;
+		max-width: none;
+	}
+
+	.barra__desde {
+		order: 4;
+		width: 100%;
+	}
+
+	/* Arriba de todo no cabe una barra fija de tres filas: en el teléfono se
+	   queda en su sitio y los botones van solo con el ícono. */
+	.barra {
+		position: static;
+	}
+
+	.barra__acciones {
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.barra__texto {
+		display: none;
+	}
+
+	.barra__acciones .boton:not(.boton--icono) {
+		width: 2.6rem;
+		padding: 0;
+	}
+
+	.barra > .segmentos {
+		width: 100%;
+	}
+
+	.barra > .segmentos button {
+		flex: 1;
+		justify-content: center;
+	}
+
+	.lienzo {
+		height: calc(100dvh - 11rem);
+	}
+}
